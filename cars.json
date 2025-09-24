@@ -1,9 +1,9 @@
 [
     {
-        "size": "s",
+        "size": "m",
         "fuel": "gasoline",
-        "doors": 3,
-        "transmission": "auto",
+        "doors": 6,
+        "transmission": "manual",
         "id": 1
     },
     {
@@ -54,19 +54,5 @@
         "doors": 5,
         "transmission": "auto",
         "id": 8
-    },
-    {
-        "size": "l",
-        "fuel": "hybrid",
-        "doors": 5,
-        "transmission": "auto",
-        "id": 9
-    },
-    {
-        "size": "s",
-        "fuel": "hybrid",
-        "doors": 4,
-        "transmission": "auto",
-        "id": 10
     }
 ]
