@@ -7,6 +7,17 @@ class CarInput(BaseModel):
     doors: int | None = None
     transmission: str | None = None
 
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "size": "m",
+                "fuel": "Gasoline",
+                "doors": 4,
+                "transmission": "Automatic"
+            }
+        }
+    }
+
 class CarOutput(CarInput):
     id: int
 
