@@ -1,5 +1,5 @@
 from typing import Annotated, Sequence
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 from fastapi.responses import JSONResponse
@@ -37,6 +37,12 @@ async def bad_trip_exception_handler(request, exc: BadTripException):
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={"message": str(exc)},
     )
+
+@app.middleware("http")
+async def add_cars_cookie(request: Request, call_next):
+    response = await call_next(request)
+    response.set_cookie(key="cars_cookie", value="visited")
+    return response
 
 if __name__ == "__main__":
     uvicorn.run("carsharing:app", reload=True)
