@@ -7,15 +7,15 @@ from schemas import Car, CarInput, CarOutput, Trip, TripInput
 
 router = APIRouter(prefix="/api/cars")
 
-@router.get("")
-async def get_cars(session: Session = Depends(get_session), size : str | None = None, doors: int | None = None) -> list[Car]:
+@router.get("/")
+async def get_cars(session: Session = Depends(get_session), size : str | None = None, doors: int | None = None) -> list:
     """Get a list of cars."""
     query = select(Car)
     if size:
         query = query.where(Car.size == size)
     if doors:
         query = query.where(Car.doors == doors)
-    return list(session.exec(query))
+    return session.exec(query).all()  # type: ignore
 
 @router.get("/{id}")
 async def get_car(session: Annotated[Session, Depends(get_session)], id: int) -> CarOutput:
@@ -50,7 +50,7 @@ async def delete_car(session: Annotated[Session, Depends(get_session)], id: int)
     else:
         raise HTTPException(status_code=404, detail="Car not found")
 
-@router.post("")
+@router.post("/")
 async def create_car(session: Annotated[Session, Depends(get_session)], car: CarInput) -> Car:
     """Create a new car."""
     new_car = Car.model_validate(car)

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Carsharing: Search Results</title>
+</head>
+<body>
+{% if cars %}
+    <p>We found the following matching cars:</p>
+    <ul>
+        {% for car in cars %}
+        <li>
+            {{car}}
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No cars found.</p>
+{% endif %}
+</body>
+</html>
