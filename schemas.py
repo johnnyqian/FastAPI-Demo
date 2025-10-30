@@ -1,4 +1,3 @@
-import json
 from sqlmodel import Field, Relationship, SQLModel
 
 class TripInput(SQLModel):
@@ -22,14 +21,16 @@ class CarInput(SQLModel):
 
     model_config = {
         "json_schema_extra": {
-            "example": {
-                "size": "m",
-                "fuel": "Gasoline",
-                "doors": 4,
-                "transmission": "Automatic"
-            }
+            "examples": [
+                {
+                    "size": "m",
+                    "doors": 4,
+                    "fuel": "Gasoline",
+                    "transmission": "Automatic"
+                }
+            ]
         }
-    }
+    } # type: ignore
 
 class Car(CarInput, table=True):
     id: int | None = Field(default=None, primary_key=True)

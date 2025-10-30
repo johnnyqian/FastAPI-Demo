@@ -1,10 +1,12 @@
 {
   "files.exclude": {
-    "__pycache__": true
+    "**/__pycache__": true
   },
   "cSpell.words": [
     "carsharing",
     "fastapi",
     "pycache"
   ],
+  "python.analysis.typeCheckingMode": "off",
+  "basedpyright.analysis.typeCheckingMode": "standard",
 }

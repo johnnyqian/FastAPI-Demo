@@ -7,7 +7,7 @@
       "command": "cmd.exe",
       "args": [
         "/c",
-        "conda activate fastapi && python -m fastapi dev ${workspaceFolder}\\carsharing.py"
+        "conda activate fastapi && python -m fastapi dev ${workspaceFolder}\\main.py"
       ],
       "group": {
         "kind": "build",

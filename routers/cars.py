@@ -1,43 +1,23 @@
 from typing import Annotated
-from fastapi import Depends, HTTPException
-from fastapi import FastAPI
-from fastapi.concurrency import asynccontextmanager
-from sqlalchemy import create_engine
-from sqlmodel import SQLModel, Session, select
-import uvicorn
+from fastapi import APIRouter, Depends, HTTPException
+from sqlmodel import Session, select
 
+from db import get_session
 from schemas import Car, CarInput, CarOutput, Trip, TripInput
 
-engine = create_engine("sqlite:///cars.db",
-    connect_args={"check_same_thread": False}, # only for SQLite
-    echo=True)
+router = APIRouter(prefix="/api/cars")
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    SQLModel.metadata.create_all(engine)
-    yield
-
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-app = FastAPI(title="Car Sharing Service", version="1.0.0", lifespan=lifespan)
-
-# @app.on_event("startup")
-# def on_startup():
-#     SQLModel.metadata.create_all(engine)
-
-@app.get("/api/cars")
-async def get_cars(session: Session = Depends(get_session), size : str = None, doors: int = None) -> list[Car]:
+@router.get("")
+async def get_cars(session: Session = Depends(get_session), size : str | None = None, doors: int | None = None) -> list[Car]:
     """Get a list of cars."""
     query = select(Car)
     if size:
         query = query.where(Car.size == size)
     if doors:
         query = query.where(Car.doors == doors)
-    return session.exec(query).all()
+    return list(session.exec(query))
 
-@app.get("/api/cars/{id}")
+@router.get("/{id}")
 async def get_car(session: Annotated[Session, Depends(get_session)], id: int) -> CarOutput:
     """Get a car by id."""
     car = session.get(Car, id)
@@ -46,7 +26,7 @@ async def get_car(session: Annotated[Session, Depends(get_session)], id: int) ->
     else:
         raise HTTPException(status_code=404, detail="Car not found")
 
-@app.put("/api/cars/{id}")
+@router.put("/{id}")
 async def update_car(session: Annotated[Session, Depends(get_session)], id: int, dto: CarInput) -> Car:
     """Update a car by id."""
     car = session.get(Car, id)
@@ -60,7 +40,7 @@ async def update_car(session: Annotated[Session, Depends(get_session)], id: int,
     else:
         raise HTTPException(status_code=404, detail="Car not found")
 
-@app.delete("/api/cars/{id}", status_code=204)
+@router.delete("/{id}", status_code=204)
 async def delete_car(session: Annotated[Session, Depends(get_session)], id: int) -> None:
     """Delete a car by id."""
     car = session.get(Car, id)
@@ -70,7 +50,7 @@ async def delete_car(session: Annotated[Session, Depends(get_session)], id: int)
     else:
         raise HTTPException(status_code=404, detail="Car not found")
 
-@app.post("/api/cars")
+@router.post("")
 async def create_car(session: Annotated[Session, Depends(get_session)], car: CarInput) -> Car:
     """Create a new car."""
     new_car = Car.model_validate(car)
@@ -80,7 +60,7 @@ async def create_car(session: Annotated[Session, Depends(get_session)], car: Car
     session.refresh(new_car)
     return new_car
 
-@app.post("/api/cars/{car_id}/trips")
+@router.post("/{car_id}/trips")
 def create_trip(session: Annotated[Session, Depends(get_session)], car_id: int, trip: TripInput) -> Trip:
     """Create a new trip."""
     car = session.get(Car, car_id)
@@ -92,11 +72,3 @@ def create_trip(session: Annotated[Session, Depends(get_session)], car_id: int, 
         return new_trip
     else:
         raise HTTPException(status_code=404, detail="Car not found")
-
-@app.get("/")
-async def welcome(name: str = "johnny"):
-    """Welcome message for the car sharing service."""
-    return {"message": f"Welcome {name} to Car Sharing services!"}
-
-if __name__ == "__main__":
-    uvicorn.run("carsharing:app", reload=True)
