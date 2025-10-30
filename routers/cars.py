@@ -60,12 +60,19 @@ async def create_car(session: Annotated[Session, Depends(get_session)], car: Car
     session.refresh(new_car)
     return new_car
 
+class BadTripException(Exception):
+    """Exception raised for bad trips."""
+    pass
+
 @router.post("/{car_id}/trips")
 def create_trip(session: Annotated[Session, Depends(get_session)], car_id: int, trip: TripInput) -> Trip:
     """Create a new trip."""
     car = session.get(Car, car_id)
     if car:
         new_trip = Trip.model_validate(trip, update={"car_id": car_id})
+        if new_trip.end < new_trip.start:
+            raise BadTripException("Trip end before start.")
+
         car.trips.append(new_trip)
         session.commit()
         session.refresh(new_trip)
