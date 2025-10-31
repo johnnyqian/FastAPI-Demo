@@ -17,7 +17,13 @@ conda activate fastapi
 Run the project:
 
 ```bash
-python -m fastapi dev carsharing.py
+python -m fastapi dev main.py
+```
+
+Run the CORS demo:
+
+```bash
+python -m http.server 8080 -d ./cors_demo
 ```
 
 Or use `Ctrl + Shift + B` to run the task in VSCode.

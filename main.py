@@ -4,7 +4,8 @@ from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 from fastapi.responses import JSONResponse
 from fastapi.responses import HTMLResponse
-from sqlmodel import SQLModel, select
+from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import SQLModel
 import uvicorn
 
 from db import engine
@@ -30,6 +31,19 @@ app = FastAPI(title="Car Sharing Service", version="1.0.0", lifespan=lifespan)
 
 app.include_router(cars.router)
 app.include_router(web.router)
+
+origins = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.exception_handler(BadTripException)
 async def bad_trip_exception_handler(request, exc: BadTripException):
