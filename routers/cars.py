@@ -3,12 +3,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
 from db import get_session
-from schemas import Car, CarInput, CarOutput, Trip, TripInput
+from routers.auth import get_current_user
+
+from schemas import Car, CarInput, CarOutput, Trip, TripInput, User
 
 router = APIRouter(prefix="/api/cars")
 
 @router.get("/")
-async def get_cars(session: Session = Depends(get_session), size : str | None = None, doors: int | None = None) -> list:
+async def get_cars(session: Session = Depends(get_session),
+    size : str | None = None, doors: int | None = None) -> list:
     """Get a list of cars."""
     query = select(Car)
     if size:
@@ -51,7 +54,9 @@ async def delete_car(session: Annotated[Session, Depends(get_session)], id: int)
         raise HTTPException(status_code=404, detail="Car not found")
 
 @router.post("/")
-async def create_car(session: Annotated[Session, Depends(get_session)], car: CarInput) -> Car:
+async def create_car(session: Annotated[Session, Depends(get_session)],
+        user: Annotated[User, Depends(get_current_user)],
+        car: CarInput) -> Car:
     """Create a new car."""
     new_car = Car.model_validate(car)
     # new_car = Car.from_orm(car)

@@ -4,3 +4,4 @@ dependencies:
   - pip
   - pip: 
     - "fastapi[all]"
+    - "bcrypt==4.2.0"

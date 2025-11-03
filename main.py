@@ -1,3 +1,5 @@
+import uvicorn
+
 from typing import Annotated, Sequence
 from fastapi import Depends, HTTPException, Request, status
 from fastapi import FastAPI
@@ -6,12 +8,10 @@ from fastapi.responses import JSONResponse
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
-import uvicorn
 
 from db import engine
-from routers import cars, web
+from routers import cars, web, auth
 from routers.cars import BadTripException
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,6 +29,7 @@ app = FastAPI(title="Car Sharing Service", version="1.0.0", lifespan=lifespan)
 #     """Welcome message for the car sharing service."""
 #     return f"Welcome {name} to Car Sharing services!"
 
+app.include_router(auth.router)
 app.include_router(cars.router)
 app.include_router(web.router)
 
@@ -59,4 +60,4 @@ async def add_cars_cookie(request: Request, call_next):
     return response
 
 if __name__ == "__main__":
-    uvicorn.run("carsharing:app", reload=True)
+    uvicorn.run("main:app", host="localhost", port=8000, reload=True)
