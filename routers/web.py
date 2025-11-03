@@ -18,7 +18,7 @@ def home(request: Request,
      # cars_cookie: str = Cookie(None),
      cars_cookie: Annotated[str | None, Cookie()] = None):
      print(cars_cookie)
-     return templates.TemplateResponse("home.html",{"request": request})
+     return templates.TemplateResponse(request, "home.html", {})
 
 
 @router.post("/search", response_class=HTMLResponse)
@@ -27,4 +27,4 @@ async def search(size: Annotated[str, Form()],
      request: Request,
      session: Annotated[Session, Depends(get_session)]):
      cars = await get_cars(size=size, doors=doors, session=session)
-     return templates.TemplateResponse("results.html", {"request": request, "cars": cars})
+     return templates.TemplateResponse(request, "results.html", {"cars": cars})

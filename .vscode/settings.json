@@ -1,11 +1,17 @@
 {
   "files.exclude": {
-    "**/__pycache__": true
+    "**/__pycache__": true,
+    "**/.pytest_cache": true
   },
   "cSpell.words": [
-    "carsharing",
+    "asyncio",
     "fastapi",
-    "pycache"
+    "passlib",
+    "pycache",
+    "pytest",
+    "sqlalchemy",
+    "sqlmodel",
+    "uvicorn"
   ],
   "python.analysis.typeCheckingMode": "off",
   "basedpyright.analysis.typeCheckingMode": "standard",

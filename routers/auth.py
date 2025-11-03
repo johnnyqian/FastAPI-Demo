@@ -1,9 +1,8 @@
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import Depends, HTTPException, APIRouter, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlmodel import Session, select
-from starlette import status
 
 from db import get_session
 from schemas import UserOutput, User

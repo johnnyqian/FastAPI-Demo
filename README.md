@@ -20,6 +20,12 @@ Run the project:
 python -m fastapi dev main.py
 ```
 
+Run tests:
+
+```bash
+python -m pytest
+```
+
 Run the CORS demo:
 
 ```bash

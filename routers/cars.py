@@ -54,7 +54,7 @@ async def delete_car(session: Annotated[Session, Depends(get_session)], id: int)
         raise HTTPException(status_code=404, detail="Car not found")
 
 @router.post("/")
-async def create_car(session: Annotated[Session, Depends(get_session)],
+async def add_car(session: Annotated[Session, Depends(get_session)],
         user: Annotated[User, Depends(get_current_user)],
         car: CarInput) -> Car:
     """Create a new car."""

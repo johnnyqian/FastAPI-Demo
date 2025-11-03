@@ -4,4 +4,11 @@ dependencies:
   - pip
   - pip: 
     - "fastapi[all]"
+    - "uvicorn"
+    - "sqlmodel"
+    - "sqlalchemy"
+    - "jinja2"
+    - "passlib"
     - "bcrypt==4.2.0"
+    - "pytest"
+    - "pytest-asyncio"
