@@ -57,3 +57,28 @@ class Car(CarInput, table=True):
 class CarOutput(CarInput):
     id: int
     trips: list[TripOutput] = []
+
+class ProductInput(SQLModel):
+    name: str
+    price: float | None = None
+    category: str | None = None
+    stock: int | None = None
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "name": "Phone charger",
+                    "price": 19.99,
+                    "category": "Electronics",
+                    "stock": 100
+                }
+            ]
+        }
+    } # type: ignore
+
+class Product(ProductInput, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+class ProductOutput(ProductInput):
+    id: int

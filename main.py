@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
 
 from db import engine
-from routers import cars, web, auth
+from routers import cars, web, auth, products
 from routers.cars import BadTripException
 
 @asynccontextmanager
@@ -31,6 +31,7 @@ app = FastAPI(title="Car Sharing Service", version="1.0.0", lifespan=lifespan)
 
 app.include_router(auth.router)
 app.include_router(cars.router)
+app.include_router(products.router)
 app.include_router(web.router)
 
 origins = [
